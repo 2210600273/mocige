@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdjzu.mocige_server.mapper.UserPreferenceMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="cn.edu.sdjzu.mocige_server.entity.UserPreference">
+        <id column="preference_id" property="preferenceId" />
+        <result column="user_id" property="userId" />
+        <result column="learning_mode" property="learningMode" />
+        <result column="daily_word_count" property="dailyWordCount" />
+        <result column="notification_enabled" property="notificationEnabled" />
+        <result column="theme" property="theme" />
+    </resultMap>
+    
+    <!-- 通用查询列 -->
+    <sql id="Base_Column_List">
+        preference_id, user_id, learning_mode, daily_word_count, notification_enabled, theme
+    </sql>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM user_preference
+        WHERE preference_id = #{id}
+    </select>
+    
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM user_preference
+    </select>
+    
+    <!-- 根据用户ID查询偏好设置 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM user_preference
+        WHERE user_id = #{userId}
+    </select>
+    
+    <!-- 根据学习模式查询 -->
+    <select id="selectByLearningMode" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM user_preference
+        WHERE learning_mode = #{learningMode}
+    </select>
+    
+    <!-- 根据每日单词数范围查询 -->
+    <select id="selectByDailyWordCountRange" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM user_preference
+        WHERE daily_word_count BETWEEN #{minCount} AND #{maxCount}
+    </select>
+    
+    <!-- 插入 -->
+    <insert id="insert" parameterType="cn.edu.sdjzu.mocige_server.entity.UserPreference" useGeneratedKeys="true" keyProperty="preferenceId">
+        INSERT INTO user_preference (user_id, learning_mode, daily_word_count, notification_enabled, theme)
+        VALUES (#{userId}, #{learningMode}, #{dailyWordCount}, #{notificationEnabled}, #{theme})
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.edu.sdjzu.mocige_server.entity.UserPreference">
+        UPDATE user_preference
+        SET user_id = #{userId},
+            learning_mode = #{learningMode},
+            daily_word_count = #{dailyWordCount},
+            notification_enabled = #{notificationEnabled},
+            theme = #{theme}
+        WHERE preference_id = #{preferenceId}
+    </update>
+    
+    <!-- 更新学习模式 -->
+    <update id="updateLearningMode">
+        UPDATE user_preference
+        SET learning_mode = #{learningMode}
+        WHERE preference_id = #{preferenceId}
+    </update>
+    
+    <!-- 更新每日单词数 -->
+    <update id="updateDailyWordCount">
+        UPDATE user_preference
+        SET daily_word_count = #{dailyWordCount}
+        WHERE preference_id = #{preferenceId}
+    </update>
+    
+    <!-- 删除 -->
+    <delete id="deleteById">
+        DELETE FROM user_preference
+        WHERE preference_id = #{id}
+    </delete>
+</mapper>

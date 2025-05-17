@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdjzu.mocige_server.mapper.RootMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="cn.edu.sdjzu.mocige_server.entity.Root">
+        <id column="root_id" property="rootId" />
+        <result column="root_name" property="rootName" />
+        <result column="meaning" property="meaning" />
+        <result column="etymology" property="etymology" />
+        <result column="example" property="example" />
+    </resultMap>
+    
+    <!-- 通用查询列 -->
+    <sql id="Base_Column_List">
+        root_id, root_name, meaning, etymology, example
+    </sql>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM root
+        WHERE root_id = #{id}
+    </select>
+    
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM root
+    </select>
+    
+    <!-- 根据词根名称查询 -->
+    <select id="selectByName" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM root
+        WHERE root_name = #{rootName}
+    </select>
+    
+    <!-- 根据词根含义查询 -->
+    <select id="selectByMeaning" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM root
+        WHERE meaning LIKE CONCAT('%', #{meaning}, '%')
+    </select>
+    
+    <!-- 根据词源查询 -->
+    <select id="selectByEtymology" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM root
+        WHERE etymology = #{etymology}
+    </select>
+    
+    <!-- 模糊查询词根 -->
+    <select id="searchByKeyword" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM root
+        WHERE root_name LIKE CONCAT('%', #{keyword}, '%')
+        OR meaning LIKE CONCAT('%', #{keyword}, '%')
+        OR etymology LIKE CONCAT('%', #{keyword}, '%')
+        OR example LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+    
+    <!-- 插入 -->
+    <insert id="insert" parameterType="cn.edu.sdjzu.mocige_server.entity.Root" useGeneratedKeys="true" keyProperty="rootId">
+        INSERT INTO root (root_name, meaning, etymology, example)
+        VALUES (#{rootName}, #{meaning}, #{etymology}, #{example})
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.edu.sdjzu.mocige_server.entity.Root">
+        UPDATE root
+        SET root_name = #{rootName},
+            meaning = #{meaning},
+            etymology = #{etymology},
+            example = #{example}
+        WHERE root_id = #{rootId}
+    </update>
+    
+    <!-- 更新词根含义 -->
+    <update id="updateMeaning">
+        UPDATE root
+        SET meaning = #{meaning}
+        WHERE root_id = #{rootId}
+    </update>
+    
+    <!-- 删除 -->
+    <delete id="deleteById">
+        DELETE FROM root
+        WHERE root_id = #{id}
+    </delete>
+</mapper>

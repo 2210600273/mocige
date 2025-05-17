@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdjzu.mocige_server.mapper.SynonymMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="cn.edu.sdjzu.mocige_server.entity.Synonym">
+        <id column="id" property="id" />
+        <result column="word_id" property="wordId" />
+        <result column="synonym" property="synonym" />
+        <result column="note" property="note" />
+    </resultMap>
+    
+    <!-- 通用查询列 -->
+    <sql id="Base_Column_List">
+        id, word_id, synonym, note
+    </sql>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM synonym
+        WHERE id = #{id}
+    </select>
+    
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM synonym
+    </select>
+    
+    <!-- 根据单词ID查询同义词列表 -->
+    <select id="selectByWordId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM synonym
+        WHERE word_id = #{wordId}
+    </select>
+    
+    <!-- 根据相关单词查询同义词 -->
+    <select id="selectByRelatedWord" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM synonym
+        WHERE synonym = #{relatedWord}
+    </select>
+    
+    <!-- 根据单词ID和相关单词查询同义词 -->
+    <select id="selectByWordIdAndRelatedWord" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM synonym
+        WHERE word_id = #{wordId} AND synonym = #{relatedWord}
+    </select>
+    
+    <!-- 插入 -->
+    <insert id="insert" parameterType="cn.edu.sdjzu.mocige_server.entity.Synonym" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO synonym (word_id, synonym, note)
+        VALUES (#{wordId}, #{synonym}, #{note})
+    </insert>
+    
+    <!-- 批量插入同义词 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO synonym (word_id, synonym, note)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.wordId}, #{item.synonym}, #{item.note})
+        </foreach>
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.edu.sdjzu.mocige_server.entity.Synonym">
+        UPDATE synonym
+        SET word_id = #{wordId},
+            synonym = #{synonym},
+            note = #{note}
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 更新相关单词 -->
+    <update id="updateRelatedWord">
+        UPDATE synonym
+        SET synonym = #{relatedWord}
+        WHERE id = #{synonymId}
+    </update>
+    
+    <!-- 根据单词ID删除同义词 -->
+    <delete id="deleteByWordId">
+        DELETE FROM synonym
+        WHERE word_id = #{wordId}
+    </delete>
+    
+    <!-- 删除 -->
+    <delete id="deleteById">
+        DELETE FROM synonym
+        WHERE id = #{id}
+    </delete>
+</mapper>

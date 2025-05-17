@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MocigeServerApplication<mocige_server>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "cn.edu.sdjzu.mocige_server.MocigeServerApplication",
+            "projectName": "mocige_server",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

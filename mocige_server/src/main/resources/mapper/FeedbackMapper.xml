@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdjzu.mocige_server.mapper.FeedbackMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="cn.edu.sdjzu.mocige_server.entity.Feedback">
+        <id column="feedback_id" property="feedbackId" />
+        <result column="user_id" property="userId" />
+        <result column="comment" property="comment" />
+        <result column="created_at" property="createdAt" />
+    </resultMap>
+    
+    <!-- 通用查询列 -->
+    <sql id="Base_Column_List">
+        feedback_id, user_id, comment, created_at
+    </sql>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM feedback
+        WHERE feedback_id = #{id}
+    </select>
+    
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM feedback
+    </select>
+    
+    <!-- 根据用户ID查询反馈 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM feedback
+        WHERE user_id = #{userId}
+    </select>
+    
+    <!-- 根据创建时间范围查询反馈 -->
+    <select id="selectByTimeRange" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM feedback
+        WHERE created_at BETWEEN #{startTime} AND #{endTime}
+    </select>
+    
+    <!-- 根据评论内容模糊查询 -->
+    <select id="selectByComment" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM feedback
+        WHERE comment LIKE CONCAT('%', #{comment}, '%')
+    </select>
+    
+    <!-- 插入 -->
+    <insert id="insert" parameterType="cn.edu.sdjzu.mocige_server.entity.Feedback" useGeneratedKeys="true" keyProperty="feedbackId">
+        INSERT INTO feedback (user_id, comment, created_at)
+        VALUES (#{userId}, #{comment}, #{createdAt})
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.edu.sdjzu.mocige_server.entity.Feedback">
+        UPDATE feedback
+        SET user_id = #{userId},
+            comment = #{comment},
+            created_at = #{createdAt}
+        WHERE feedback_id = #{feedbackId}
+    </update>
+    
+    <!-- 删除 -->
+    <delete id="deleteById">
+        DELETE FROM feedback
+        WHERE feedback_id = #{id}
+    </delete>
+</mapper>

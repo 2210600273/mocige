@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdjzu.mocige_server.mapper.MediaMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="cn.edu.sdjzu.mocige_server.entity.Media">
+        <id column="media_id" property="mediaId" />
+        <result column="word_id" property="wordId" />
+        <result column="media_type" property="mediaType" />
+        <result column="media_url" property="mediaUrl" />
+    </resultMap>
+    
+    <!-- 通用查询列 -->
+    <sql id="Base_Column_List">
+        media_id, word_id, media_type, media_url
+    </sql>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM media
+        WHERE media_id = #{id}
+    </select>
+    
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM media
+    </select>
+    
+    <!-- 根据类型查询 -->
+    <select id="selectByType" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM media
+        WHERE media_type = #{mediaType}
+    </select>
+    
+    <!-- 根据URL查询 -->
+    <select id="selectByUrl" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM media
+        WHERE media_url = #{url}
+    </select>
+    
+    <!-- 根据关联ID查询 -->
+    <select id="selectByRelatedId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM media
+        WHERE word_id = #{relatedId}
+    </select>
+    
+    <!-- 根据关联类型查询 -->
+    <select id="selectByRelatedType" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM media
+        WHERE media_type = #{relatedType}
+    </select>
+    
+    <!-- 插入 -->
+    <insert id="insert" parameterType="cn.edu.sdjzu.mocige_server.entity.Media" useGeneratedKeys="true" keyProperty="mediaId">
+        INSERT INTO media (word_id, media_type, media_url)
+        VALUES (#{wordId}, #{mediaType}, #{mediaUrl})
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.edu.sdjzu.mocige_server.entity.Media">
+        UPDATE media
+        SET word_id = #{wordId},
+            media_type = #{mediaType},
+            media_url = #{mediaUrl}
+        WHERE media_id = #{mediaId}
+    </update>
+    
+    <!-- 更新URL -->
+    <update id="updateUrl">
+        UPDATE media
+        SET media_url = #{url}
+        WHERE media_id = #{mediaId}
+    </update>
+    
+    <!-- 删除 -->
+    <delete id="deleteById">
+        DELETE FROM media
+        WHERE media_id = #{id}
+    </delete>
+</mapper>

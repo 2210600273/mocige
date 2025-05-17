@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdjzu.mocige_server.mapper.AffixMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="cn.edu.sdjzu.mocige_server.entity.Affix">
+        <id column="affix_id" property="affixId" />
+        <result column="affix" property="affix" />
+        <result column="affix_type" property="affixType" />
+        <result column="meaning" property="meaning" />
+        <result column="example" property="example" />
+    </resultMap>
+    
+    <!-- 通用查询列 -->
+    <sql id="Base_Column_List">
+        affix_id, affix, affix_type, meaning, example
+    </sql>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM affix
+        WHERE affix_id = #{affixId}
+    </select>
+    
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM affix
+    </select>
+    
+    <!-- 根据词缀名称模糊查询 -->
+    <select id="selectByAffix" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM affix
+        WHERE affix LIKE CONCAT('%', #{affix}, '%')
+    </select>
+    
+    <!-- 插入 -->
+    <insert id="insert" parameterType="cn.edu.sdjzu.mocige_server.entity.Affix" useGeneratedKeys="true" keyProperty="affixId">
+        INSERT INTO affix (affix, affix_type, meaning, example)
+        VALUES (#{affix}, #{affixType}, #{meaning}, #{example})
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.edu.sdjzu.mocige_server.entity.Affix">
+        UPDATE affix
+        SET affix = #{affix},
+            affix_type = #{affixType},
+            meaning = #{meaning},
+            example = #{example}
+        WHERE affix_id = #{affixId}
+    </update>
+    
+    <!-- 删除 -->
+    <delete id="deleteById">
+        DELETE FROM affix
+        WHERE affix_id = #{affixId}
+    </delete>
+</mapper>

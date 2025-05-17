@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdjzu.mocige_server.mapper.WordMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="cn.edu.sdjzu.mocige_server.entity.Word">
+        <id column="word_id" property="wordId" />
+        <result column="word" property="word" />
+        <result column="pronunciation" property="pronunciation" />
+        <result column="definition" property="definition" />
+        <result column="part_of_speech" property="partOfSpeech" />
+    </resultMap>
+    
+    <!-- 通用查询列 -->
+    <sql id="Base_Column_List">
+        word_id, word, pronunciation, definition, part_of_speech
+    </sql>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM word
+        WHERE word_id = #{id}
+    </select>
+    
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM word
+    </select>
+    
+    <!-- 根据单词查询 -->
+    <select id="selectByWord" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM word
+        WHERE word = #{word}
+    </select>
+    
+    <!-- 根据词性查询 -->
+    <select id="selectByPartOfSpeech" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM word
+        WHERE part_of_speech = #{partOfSpeech}
+    </select>
+    
+    <!-- 根据定义模糊查询 -->
+    <select id="selectByDefinition" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM word
+        WHERE definition LIKE CONCAT('%', #{definition}, '%')
+    </select>
+    
+    <!-- 根据关键词搜索单词 -->
+    <select id="searchByKeyword" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM word
+        WHERE word LIKE CONCAT('%', #{keyword}, '%')
+        OR definition LIKE CONCAT('%', #{keyword}, '%')
+    </select>
+    
+    <!-- 插入 -->
+    <insert id="insert" parameterType="cn.edu.sdjzu.mocige_server.entity.Word" useGeneratedKeys="true" keyProperty="wordId">
+        INSERT INTO word (word, pronunciation, definition, part_of_speech)
+        VALUES (#{word}, #{pronunciation}, #{definition}, #{partOfSpeech})
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.edu.sdjzu.mocige_server.entity.Word">
+        UPDATE word
+        SET word = #{word},
+            pronunciation = #{pronunciation},
+            definition = #{definition},
+            part_of_speech = #{partOfSpeech}
+        WHERE word_id = #{wordId}
+    </update>
+    
+    <!-- 更新单词发音 -->
+    <update id="updatePronunciation">
+        UPDATE word
+        SET pronunciation = #{pronunciation}
+        WHERE word_id = #{wordId}
+    </update>
+    
+    <!-- 更新单词定义 -->
+    <update id="updateDefinition">
+        UPDATE word
+        SET definition = #{definition}
+        WHERE word_id = #{wordId}
+    </update>
+    
+    <!-- 删除 -->
+    <delete id="deleteById">
+        DELETE FROM word
+        WHERE word_id = #{id}
+    </delete>
+</mapper>

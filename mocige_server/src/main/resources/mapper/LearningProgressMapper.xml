@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdjzu.mocige_server.mapper.LearningProgressMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="cn.edu.sdjzu.mocige_server.entity.LearningProgress">
+        <id column="progress_id" property="progressId" />
+        <result column="user_id" property="userId" />
+        <result column="word_id" property="wordId" />
+        <result column="last_reviewed" property="lastReviewed" />
+        <result column="reviews_count" property="reviewsCount" />
+        <result column="mastery_level" property="masteryLevel" />
+    </resultMap>
+    
+    <!-- 通用查询列 -->
+    <sql id="Base_Column_List">
+        progress_id, user_id, word_id, last_reviewed, reviews_count, mastery_level
+    </sql>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM learning_progress
+        WHERE progress_id = #{id}
+    </select>
+    
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM learning_progress
+    </select>
+    
+    <!-- 根据用户ID查询学习进度 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM learning_progress
+        WHERE user_id = #{userId}
+    </select>
+    
+    <!-- 根据单词ID查询学习进度 -->
+    <select id="selectByWordId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM learning_progress
+        WHERE word_id = #{wordId}
+    </select>
+    
+    <!-- 根据用户ID和单词ID查询学习进度 -->
+    <select id="selectByUserIdAndWordId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM learning_progress
+        WHERE user_id = #{userId} AND word_id = #{wordId}
+    </select>
+    
+    <!-- 根据最后复习时间范围查询 -->
+    <select id="selectByLastReviewedRange" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM learning_progress
+        WHERE last_reviewed BETWEEN #{startTime} AND #{endTime}
+    </select>
+    
+    <!-- 根据掌握程度查询 -->
+    <select id="selectByMasteryLevel" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM learning_progress
+        WHERE mastery_level = #{masteryLevel}
+    </select>
+    
+    <!-- 插入 -->
+    <insert id="insert" parameterType="cn.edu.sdjzu.mocige_server.entity.LearningProgress" useGeneratedKeys="true" keyProperty="progressId">
+        INSERT INTO learning_progress (user_id, word_id, last_reviewed, reviews_count, mastery_level)
+        VALUES (#{userId}, #{wordId}, #{lastReviewed}, #{reviewsCount}, #{masteryLevel})
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.edu.sdjzu.mocige_server.entity.LearningProgress">
+        UPDATE learning_progress
+        SET user_id = #{userId},
+            word_id = #{wordId},
+            last_reviewed = #{lastReviewed},
+            reviews_count = #{reviewsCount},
+            mastery_level = #{masteryLevel}
+        WHERE progress_id = #{progressId}
+    </update>
+    
+    <!-- 更新复习次数 -->
+    <update id="updateReviewsCount">
+        UPDATE learning_progress
+        SET reviews_count = #{reviewsCount}
+        WHERE progress_id = #{progressId}
+    </update>
+    
+    <!-- 更新掌握程度 -->
+    <update id="updateMasteryLevel">
+        UPDATE learning_progress
+        SET mastery_level = #{masteryLevel}
+        WHERE progress_id = #{progressId}
+    </update>
+    
+    <!-- 更新最后复习时间 -->
+    <update id="updateLastReviewed">
+        UPDATE learning_progress
+        SET last_reviewed = #{lastReviewed}
+        WHERE progress_id = #{progressId}
+    </update>
+    
+    <!-- 删除 -->
+    <delete id="deleteById">
+        DELETE FROM learning_progress
+        WHERE progress_id = #{id}
+    </delete>
+</mapper>

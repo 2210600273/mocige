@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdjzu.mocige_server.mapper.AntonymMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="cn.edu.sdjzu.mocige_server.entity.Antonym">
+        <id column="id" property="id" />
+        <result column="word_id" property="wordId" />
+        <result column="antonym" property="antonym" />
+        <result column="note" property="note" />
+    </resultMap>
+    
+    <!-- 通用查询列 -->
+    <sql id="Base_Column_List">
+        id, word_id, antonym, note
+    </sql>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM antonym
+        WHERE id = #{id}
+    </select>
+    
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM antonym
+    </select>
+    
+    <!-- 根据单词ID查询反义词列表 -->
+    <select id="selectByWordId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM antonym
+        WHERE word_id = #{wordId}
+    </select>
+    
+    <!-- 根据相关单词查询反义词 -->
+    <select id="selectByRelatedWord" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM antonym
+        WHERE antonym = #{relatedWord}
+    </select>
+    
+    <!-- 插入 -->
+    <insert id="insert" parameterType="cn.edu.sdjzu.mocige_server.entity.Antonym" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO antonym (word_id, antonym, note)
+        VALUES (#{wordId}, #{antonym}, #{note})
+    </insert>
+    
+    <!-- 批量插入反义词 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO antonym (word_id, antonym, note)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.wordId}, #{item.antonym}, #{item.note})
+        </foreach>
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.edu.sdjzu.mocige_server.entity.Antonym">
+        UPDATE antonym
+        SET word_id = #{wordId},
+            antonym = #{antonym},
+            note = #{note}
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 根据单词ID删除反义词 -->
+    <delete id="deleteByWordId">
+        DELETE FROM antonym
+        WHERE word_id = #{wordId}
+    </delete>
+    
+    <!-- 删除 -->
+    <delete id="deleteById">
+        DELETE FROM antonym
+        WHERE id = #{id}
+    </delete>
+</mapper>

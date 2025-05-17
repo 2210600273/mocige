@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdjzu.mocige_server.mapper.WordSentenceMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="cn.edu.sdjzu.mocige_server.entity.WordSentence">
+        <id column="id" property="id" />
+        <result column="word_id" property="wordId" />
+        <result column="sentence_id" property="sentenceId" />
+        <result column="note" property="note" />
+    </resultMap>
+    
+    <!-- 通用查询列 -->
+    <sql id="Base_Column_List">
+        id, word_id, sentence_id, note
+    </sql>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM word_sentence
+        WHERE id = #{id}
+    </select>
+    
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM word_sentence
+    </select>
+    
+    <!-- 根据单词ID查询关联的例句 -->
+    <select id="selectByWordId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM word_sentence
+        WHERE word_id = #{wordId}
+    </select>
+    
+    <!-- 根据例句ID查询关联的单词 -->
+    <select id="selectBySentenceId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM word_sentence
+        WHERE sentence_id = #{sentenceId}
+    </select>
+    
+    <!-- 根据单词ID和例句ID查询关联 -->
+    <select id="selectByWordIdAndSentenceId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM word_sentence
+        WHERE word_id = #{wordId} AND sentence_id = #{sentenceId}
+    </select>
+    
+    <!-- 插入 -->
+    <insert id="insert" parameterType="cn.edu.sdjzu.mocige_server.entity.WordSentence" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO word_sentence (word_id, sentence_id, note)
+        VALUES (#{wordId}, #{sentenceId}, #{note})
+    </insert>
+    
+    <!-- 批量插入单词-例句关联 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO word_sentence (word_id, sentence_id, note)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{item.wordId}, #{item.sentenceId}, #{item.note})
+        </foreach>
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.edu.sdjzu.mocige_server.entity.WordSentence">
+        UPDATE word_sentence
+        SET word_id = #{wordId},
+            sentence_id = #{sentenceId},
+            note = #{note}
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 更新关联备注 -->
+    <update id="updateNote">
+        UPDATE word_sentence
+        SET note = #{note}
+        WHERE id = #{id}
+    </update>
+    
+    <!-- 删除 -->
+    <delete id="deleteById">
+        DELETE FROM word_sentence
+        WHERE id = #{id}
+    </delete>
+</mapper>

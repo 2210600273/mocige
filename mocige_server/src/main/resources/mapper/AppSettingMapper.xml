@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdjzu.mocige_server.mapper.AppSettingMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="cn.edu.sdjzu.mocige_server.entity.AppSetting">
+        <id column="setting_id" property="settingId" />
+        <result column="reminder_time" property="reminderTime" />
+        <result column="theme" property="theme" />
+    </resultMap>
+    
+    <!-- 通用查询列 -->
+    <sql id="Base_Column_List">
+        setting_id, reminder_time, theme
+    </sql>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM app_setting
+        WHERE setting_id = #{id}
+    </select>
+    
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM app_setting
+    </select>
+    
+    <!-- 根据主题查询 -->
+    <select id="selectByTheme" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM app_setting
+        WHERE theme = #{theme}
+    </select>
+    
+    <!-- 插入 -->
+    <insert id="insert" parameterType="cn.edu.sdjzu.mocige_server.entity.AppSetting" useGeneratedKeys="true" keyProperty="settingId">
+        INSERT INTO app_setting (reminder_time, theme)
+        VALUES (#{reminderTime}, #{theme})
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.edu.sdjzu.mocige_server.entity.AppSetting">
+        UPDATE app_setting
+        SET reminder_time = #{reminderTime},
+            theme = #{theme}
+        WHERE setting_id = #{settingId}
+    </update>
+    
+    <!-- 删除 -->
+    <delete id="deleteById">
+        DELETE FROM app_setting
+        WHERE setting_id = #{id}
+    </delete>
+</mapper>

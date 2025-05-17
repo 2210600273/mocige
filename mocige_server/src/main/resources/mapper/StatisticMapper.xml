@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.sdjzu.mocige_server.mapper.StatisticMapper">
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="cn.edu.sdjzu.mocige_server.entity.Statistic">
+        <id column="stat_id" property="statId" />
+        <result column="user_id" property="userId" />
+        <result column="total_study_time" property="totalStudyTime" />
+        <result column="total_words_learned" property="totalWordsLearned" />
+    </resultMap>
+    
+    <!-- 通用查询列 -->
+    <sql id="Base_Column_List">
+        stat_id, user_id, total_study_time, total_words_learned
+    </sql>
+    
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM statistic
+        WHERE stat_id = #{id}
+    </select>
+    
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM statistic
+    </select>
+    
+    <!-- 根据用户ID查询统计信息 -->
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM statistic
+        WHERE user_id = #{userId}
+    </select>
+    
+    <!-- 根据总学习时间范围查询 -->
+    <select id="selectByTotalStudyTimeRange" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM statistic
+        WHERE total_study_time BETWEEN #{minTime} AND #{maxTime}
+    </select>
+    
+    <!-- 根据总学习单词数范围查询 -->
+    <select id="selectByTotalWordsLearnedRange" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM statistic
+        WHERE total_words_learned BETWEEN #{minCount} AND #{maxCount}
+    </select>
+    
+    <!-- 插入 -->
+    <insert id="insert" parameterType="cn.edu.sdjzu.mocige_server.entity.Statistic" useGeneratedKeys="true" keyProperty="statId">
+        INSERT INTO statistic (user_id, total_study_time, total_words_learned)
+        VALUES (#{userId}, #{totalStudyTime}, #{totalWordsLearned})
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="cn.edu.sdjzu.mocige_server.entity.Statistic">
+        UPDATE statistic
+        SET user_id = #{userId},
+            total_study_time = #{totalStudyTime},
+            total_words_learned = #{totalWordsLearned}
+        WHERE stat_id = #{statId}
+    </update>
+    
+    <!-- 更新总学习时间 -->
+    <update id="updateTotalStudyTime">
+        UPDATE statistic
+        SET total_study_time = #{totalStudyTime}
+        WHERE stat_id = #{statId}
+    </update>
+    
+    <!-- 更新总学习单词数 -->
+    <update id="updateTotalWordsLearned">
+        UPDATE statistic
+        SET total_words_learned = #{totalWordsLearned}
+        WHERE stat_id = #{statId}
+    </update>
+    
+    <!-- 增加学习时间 -->
+    <update id="incrementStudyTime">
+        UPDATE statistic
+        SET total_study_time = total_study_time + #{additionalTime}
+        WHERE user_id = #{userId}
+    </update>
+    
+    <!-- 增加学习单词数 -->
+    <update id="incrementWordsLearned">
+        UPDATE statistic
+        SET total_words_learned = total_words_learned + #{additionalWords}
+        WHERE user_id = #{userId}
+    </update>
+    
+    <!-- 删除 -->
+    <delete id="deleteById">
+        DELETE FROM statistic
+        WHERE stat_id = #{id}
+    </delete>
+</mapper>
